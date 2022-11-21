@@ -1,5 +1,7 @@
 package pxcanvas
 
+import "fyne.io/fyne/v2"
+
 func (pxCanvas *PxCanvas) Pan(prerviousCoord, currentCoord fyne.PointEvent){
 	xDiff := currentCoord.Position.X - prerviousCoord.Position.X
 	yDiff := currentCoord.Position.Y - prerviousCoord.Position.Y	
