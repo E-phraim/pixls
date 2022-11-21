@@ -3,7 +3,7 @@ package pxcanvas
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
-	"github.com/yuin/goldmark/renderer"
+	// "github.com/yuin/goldmark/renderer"
 )
 
 type PxCanvasRenderer struct{
@@ -21,7 +21,7 @@ func (renderer *PxCanvasRenderer) MinSize() fyne.Size{
 func (renderer *PxCanvasRenderer) Objects() []fyne.CanvasObject{
 	objects := make([]fyne.CanvasObject, 0, 5)
 	for i := 0; i < len(renderer.canvasBorder); i++{
-		objects := append(objects, &renderer.canvasBorder[i])
+		objects = append(objects, &renderer.canvasBorder[i])
 	}
 	objects = append(objects, renderer.canvasImage)
 	return objects

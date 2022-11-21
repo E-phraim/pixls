@@ -42,7 +42,7 @@ func InBounds (pos fyne.Position, bounds image.Rectangle) bool{
 	return false
 }
 
-func NewBlankImage(cols, rows, int, c color.Color) image.Image{
+func NewBlankImage(cols, rows int, c color.Color) image.Image{
 	img := image.NewNRGBA(image.Rect(0, 0, cols, rows))
 	for y := 0; y < rows; y++{
 		for x := 0; x < cols; x++{
@@ -57,12 +57,12 @@ func NewPxCanvas(state *apptype.State, config apptype.PxCanvasConfig) *PxCanvas{
 		PxCanvasConfig: config,
 		appState: state,
 	}
-	pxCanvas.PixelData = NewBlankImage(pxCanvas.PxCols, pxCanvas.PxRows, color.NRGBA{128, 128, 255})
+	pxCanvas.PixelData = NewBlankImage(pxCanvas.PxCols, pxCanvas.PxRows, color.NRGBA{128, 128, 128, 255})
 	pxCanvas.ExtendBaseWidget(pxCanvas)
 	return pxCanvas
 }
 
-func (PxCanvas *PxCanvas) CreateRenderer() fyne.WidgetRenderer{
+func (pxCanvas *PxCanvas) CreateRenderer() fyne.WidgetRenderer{
 	canvasImage := canvas.NewImageFromImage(pxCanvas.PixelData)
 	canvasImage.ScaleMode = canvas.ImageScalePixels
 	canvasImage.FillMode = canvas.ImageFillContain
@@ -74,10 +74,10 @@ func (PxCanvas *PxCanvas) CreateRenderer() fyne.WidgetRenderer{
 	}
 
 	renderer := &PxCanvasRenderer{
-		pxCanvas: PxCanvas,
+		pxCanvas: pxCanvas,
 		canvasImage: canvasImage,
 		canvasBorder: canvasBorder,
 	}
-	PxCanvas.renderer = renderer
+	pxCanvas.renderer = renderer
 	return renderer
 }
