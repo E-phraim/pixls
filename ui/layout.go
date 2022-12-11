@@ -7,6 +7,7 @@ import (
 )
 
 func Setup(app *AppInit) {
+	SetupMenus(app)
 	swatchesContainer := BuildSwatches(app)
 	colorPicker := SetupColorPicker(app)
 

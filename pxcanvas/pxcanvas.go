@@ -84,8 +84,55 @@ func (pxCanvas *PxCanvas) CreateRenderer() fyne.WidgetRenderer{
 	return renderer
 }
 
-func (PxCanvas *PxCanvas) TryPan(previousCoord *fyne.PointEvent, ev *desktop.MouseEvent){
-	if previousCoord != nil && ev.Button == desktop.MouseButtonTertiary{
-		PxCanvas.Pan(*previousCoord, ev.PointEvent)
+func (PxCanvas *PxCanvas) TryPan(previousCoord *fyne.PointEvent, v *desktop.MouseEvent){
+	if previousCoord != nil && v.Button == desktop.MouseButtonTertiary{
+		PxCanvas.Pan(*previousCoord, v.PointEvent)
 	}
+}
+
+//Brushable interface
+func (pxCanvas *PxCanvas) SetColor(c color.Color, x, y int){
+	if nrgba, ok := pxCanvas.PixelData.(*image.NRGBA); ok{
+		nrgba.Set(x, y, c)
+	}
+
+	if rgba, ok := pxCanvas.PixelData.(*image.RGBA); ok{
+		rgba.Set(x, y, c)
+	}
+	pxCanvas.Refresh()
+}
+
+func (pxCanvas *PxCanvas) MouseToCanvasXY(v *desktop.MouseEvent) (*int, *int){
+	bounds := pxCanvas.Bounds()
+	if !InBounds(v.Position, bounds){
+		return nil, nil
+	}
+
+	pxSize := float32(pxCanvas.PxSize)
+	xOffset := pxCanvas.CanvasOffset.X
+	yOffset := pxCanvas.CanvasOffset.Y
+
+	x := int((v.Position.X - xOffset) / pxSize)
+	y := int((v.Position.Y - yOffset) / pxSize)
+
+	return &x, &y
+}
+
+func (pxCanvas *PxCanvas) LoadImage(img image.Image){
+	dimensions := img.Bounds()
+
+	pxCanvas.PxCanvasConfig.PxCols = dimensions.Dx()
+	pxCanvas.PxCanvasConfig.PxRows = dimensions.Dy()
+
+	pxCanvas.PixelData = img
+	pxCanvas.reloadImage = true
+	pxCanvas.Refresh()
+}
+
+func (pxCanvas *PxCanvas) NewDrawing(cols, rows int){
+	pxCanvas.appState.SetFilePath("")
+	pxCanvas.PxCols = cols
+	pxCanvas.PxRows = rows
+	pixelData := NewBlankImage(cols, rows, color.NRGBA{128, 128, 128, 255})
+	pxCanvas.LoadImage(pixelData)
 }
